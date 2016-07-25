@@ -1,17 +1,19 @@
 {
     "compilerOptions": {
         "target": "es5",
+        "moduleResolution": "node",
         "module": "system",
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "outFile": "/build/app.js",
+        "outFile": "./build/scripts/app.js",
         "sourceMap": true
     },
     "exclude": [
         "node_modules",
-        "typings/main"
+        "dist",
+        "build"
     ]
 }
