@@ -5,13 +5,14 @@
 (function(global) {
   // map tells the System loader where to look for things
   var map = {
-    'app':                        './', // 'dist',
+    'app':                        'scripts', // 'dist',
     '@angular':                   'dependencies/angular',
+    'angular2-in-memory-web-api': 'dependencies/webapi',
     'rxjs':                       'dependencies/rxjs'
   };
   // packages tells the System loader how to load when no filename and/or no extension
   var packages = {
-    'app':                        { main: 'app.js',  defaultExtension: 'js' },
+    'app':                        { main: 'main.js',  defaultExtension: 'js' },
     'rxjs':                       { defaultExtension: 'js' },
     'angular2-in-memory-web-api': { main: 'index.js', defaultExtension: 'js' },
   };

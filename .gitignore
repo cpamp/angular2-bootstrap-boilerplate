@@ -1,7 +1,6 @@
 node_modules
 typings
 *.log
-src
 dist
 build
 .vscode

@@ -1,44 +1,54 @@
-var SCRIPT_NAME = 'app.js';
-var CSS_NAME = 'app.css';
-var DIST_DIR = './dist';
-var DIST_DEPENDENCIES_DIR = DIST_DIR + '/dependencies';
-var DIST_INDEX_NAME = 'index.html';
+var source_folder = 'src';
+var production_folder = 'dist';
+var build_folder = 'build';
+var index_file = 'index.html';
+
+// Files
+var SRC_INDEX = source_folder + '/' + index_file;
+var DIST_INDEX_NAME = index_file;
 var DIST_JS_DEPENDENCIES = 'dependencies.js';
 var DIST_CSS_DEPENDENCIES = 'dependencies.css';
-var DIST_ANGULAR = DIST_DEPENDENCIES_DIR + '/angular';
-var DIST_RXJS = DIST_DEPENDENCIES_DIR + '/rxjs';
-var DIST_SYSTEM = DIST_DEPENDENCIES_DIR;
+// Folders
+var DIST_DIR = production_folder;
+var DIST_DEPENDENCIES = DIST_DIR + '/dependencies';
+var DIST_SCRIPTS = DIST_DIR + '/scripts';
+var DIST_TEMPLATES = DIST_DIR + '/templates';
+var DIST_STYLESHEETS = DIST_DIR + '/stylesheets';
+var DIST_FONTS = DIST_DEPENDENCIES;
+var DIST_ANGULAR = DIST_DEPENDENCIES + '/angular';
+var DIST_RXJS = DIST_DEPENDENCIES + '/rxjs';
+var DIST_WEBAPI = DIST_DEPENDENCIES + '/webapi';
 
+/** Dependencies */
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var inject = require('gulp-inject');
 var uglifyCss = require('gulp-uglifycss');
 var htmlMin = require('gulp-htmlmin');
-var copy = require('gulp-contrib-copy');
-var embedTemplates = require('gulp-angular-embed-templates');
+/** End Dependencies */
 
-var src_index = 'src/index.html';
+var templates = source_folder + '/templates/**/*.html';
+var scripts = build_folder + '/scripts/**/*.js';
+var stylesheets = source_folder + '/stylesheets/*.css';
 
-var templates = 'src/templates/**/*.html';
+var angular = 'node_modules/@angular/**/*';
+var webapi = 'node_modules/angular2-in-memory-web-api/**/*';
+var rxjs = 'node_modules/rxjs/**/*';
 
-var scripts = 'build/scripts/**/*.js';
-
-var css = 'src/css/*.css';
-
-var angular = 'node_modules/@angular';
-
-var rxjs = 'node_modules/rxjs';
-
-var system = 'node_modules/systemjs/dist/system.js';
-
-var script_dependencies = [
-    'node_modules/core-js/client/shim.min.js',
-    'node_modules/zone.js/dist/zone.min.js',
-    'node_modules/reflect-metadata/Reflect.js',
-    'systemjs.config.js',
+var scripts_concat = [
     'node_modules/jquery/dist/jquery.min.js',
     'node_modules/bootstrap/dist/js/bootstrap.min.js'
+]
+
+var scripts_dependencies = [
+    'node_modules/core-js/client/shim.min.js',
+    'node_modules/core-js/client/shim.min.js.map',
+    'node_modules/zone.js/dist/zone.min.js',
+    'node_modules/reflect-metadata/Reflect.js',
+    'node_modules/reflect-metadata/Reflect.js.map',
+    'node_modules/systemjs/dist/system.js.map',
+    source_folder + '/systemjs.config.js'
 ];
 
 var css_dependencies = [
@@ -46,101 +56,107 @@ var css_dependencies = [
     'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'
 ];
 
-var css_dependencies_maps = [
-    'node_modules/bootstrap/dist/css/bootstrap-theme.min.css.map',
-    'node_modules/systemjs/dist/system.js.map',
-    'node_modules/jquery/dist/jquery.min.map'
-];
-
 var font_dependencies = [
     'node_modules/bootstrap/dist/fonts/*.svg'
 ];
 
+var inject_files = [
+    DIST_DEPENDENCIES + '/shim.min.js',
+    DIST_DEPENDENCIES + '/zone.min.js',
+    DIST_DEPENDENCIES + '/Reflect.js',
+    DIST_DEPENDENCIES + '/system.js',
+    DIST_DEPENDENCIES + '/systemjs.config.js',
+    DIST_DEPENDENCIES + DIST_JS_DEPENDENCIES,
+    DIST_DEPENDENCIES + DIST_CSS_DEPENDENCIES
+];
+
 function concatDependencies() {
-    gulp.src(script_dependencies)
+    return gulp.src(scripts_concat)
         .pipe(concat(DIST_JS_DEPENDENCIES))
-        .pipe(gulp.dest(DIST_DEPENDENCIES_DIR));
-
-    return gulp.src(css_dependencies)
-        .pipe(concat(DIST_CSS_DEPENDENCIES))
-        .pipe(gulp.dest(DIST_DEPENDENCIES_DIR));
-}
-
-function copyIndex() {
-    return gulp.src(src_index)
-        .pipe(copy())
-        .pipe(gulp.dest(DIST_DIR));
-}
-
-function copySystem() {
-    return gulp.src(system)
-        .pipe(copy())
-        .pipe(gulp.dest(DIST_SYSTEM));
-}
-
-function copyMap() {
-    return gulp.src(css_dependencies_maps)
-        .pipe(copy())
-        .pipe(gulp.dest(DIST_DEPENDENCIES_DIR));
+        .pipe(gulp.dest(DIST_DEPENDENCIES));
 }
 
 function copyFont() {
     return gulp.src(font_dependencies)
-        .pipe(copy())
-        .pipe(gulp.dest(DIST_DEPENDENCIES_DIR));
+        .pipe(gulp.dest(DIST_FONTS));
 }
 
 function uglifyDistJs() {
     return gulp.src(scripts)
-        .pipe(embedTemplates())
         .pipe(uglify())
-        .pipe(gulp.dest(DIST_DIR));
+        .pipe(gulp.dest(DIST_SCRIPTS));
 }
 
 function uglifyDistCss() {
-    return gulp.src(css)
-        .pipe(concat(CSS_NAME))
+    return gulp.src(stylesheets)
         .pipe(uglifyCss())
-        .pipe(gulp.dest(DIST_DIR));
+        .pipe(gulp.dest(DIST_STYLESHEETS));
+}
+
+function minifyTemplates() {
+    return gulp.src(templates)
+        .pipe(htmlMin({collapseWhitespace: true}))
+        .pipe(gulp.dest(DIST_TEMPLATES))
+}
+
+function copyDependencies() {
+    return gulp.src(scripts_dependencies)
+        .pipe(gulp.dest(DIST_DEPENDENCIES));
 }
 
 function buildIndex() {
-    var sources = gulp.src([DIST_DIR + '/**/*.js', DIST_DIR + '/**/*.css', DIST_DIR + '/**/*.svg']);
-    return copyIndex()
+    var sources = gulp.src(inject_files, {read: false});
+    return gulp.src(SRC_INDEX)
         .pipe(inject(sources, {ignorePath: 'dist', addRootSlash: false}))
         .pipe(gulp.dest(DIST_DIR));
 }
 
 function copyAngular() {
     return gulp.src(angular)
-        .pipe(copy())
         .pipe(gulp.dest(DIST_ANGULAR));
 }
 
 function copyRxjs() {
     return gulp.src(rxjs)
-        .pipe(copy())
         .pipe(gulp.dest(DIST_RXJS))
 }
 
+function copyWebapi() {
+    return gulp.src(webapi)
+        .pipe(gulp.dest(DIST_WEBAPI))
+}
+
 gulp.task('concatDependencies', concatDependencies);
-gulp.task('copyIndex', copyIndex);
-gulp.task('copySystem', copySystem);
-gulp.task('copyMap', copyMap);
 gulp.task('copyFont', copyFont);
 gulp.task('uglifyDistJs', uglifyDistJs);
 gulp.task('uglifyDistCss', uglifyDistCss);
-gulp.task('buildIndex', buildIndex);
+gulp.task('minifyTemplates', minifyTemplates);
+gulp.task('copyDependencies', copyDependencies);
+gulp.task('buildIndex', ['concatDependencies', 'copyDependencies', 'uglifyDistCss'], buildIndex);
 gulp.task('copyAngular', copyAngular);
 gulp.task('copyRxjs', copyRxjs);
-gulp.task('build', [
+gulp.task('copyWebapi', copyWebapi);
+gulp.task('build-full', [
     'concatDependencies',
-    'copySystem',
-    'copyMap',
     'copyFont',
     'uglifyDistJs',
     'uglifyDistCss',
+    'minifyTemplates',
+    'copyDependencies',
     'buildIndex',
     'copyAngular',
-    'copyRxjs'
+    'copyRxjs',
+    'copyWebapi'
+]);
+gulp.task('build-quick', [
+    'concatDependencies',
+    'copyFont',
+    'uglifyDistJs',
+    'uglifyDistCss',
+    'minifyTemplates',
+    'copyDependencies',
+    'buildIndex',
+]);
+gulp.task('build', [
+    'build-quick'
 ]);
