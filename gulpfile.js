@@ -1,6 +1,5 @@
 var source_folder = 'src';
 var production_folder = 'dist';
-var build_folder = 'build';
 var index_file = 'index.html';
 
 // Files
@@ -25,11 +24,10 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var inject = require('gulp-inject');
 var uglifyCss = require('gulp-uglifycss');
-var htmlMin = require('gulp-htmlmin');
+var embed = require('gulp-angular2-embed-templates');
 /** End Dependencies */
 
-var templates = source_folder + '/templates/**/*.html';
-var scripts = build_folder + '/scripts/**/*.js';
+var scripts = source_folder + '/scripts-transpiled/**/*.js';
 var stylesheets = source_folder + '/stylesheets/*.css';
 
 var angular = 'node_modules/@angular/**/*';
@@ -48,7 +46,7 @@ var scripts_dependencies = [
     'node_modules/reflect-metadata/Reflect.js',
     'node_modules/reflect-metadata/Reflect.js.map',
     'node_modules/systemjs/dist/system.js.map',
-    source_folder + '/systemjs.config.js'
+    source_folder + '/scripts/systemjs.config.js'
 ];
 
 var css_dependencies = [
@@ -84,6 +82,7 @@ function copyFont() {
 function uglifyDistJs() {
     return gulp.src(scripts)
         .pipe(uglify())
+        .pipe(embed())
         .pipe(gulp.dest(DIST_SCRIPTS));
 }
 
@@ -91,12 +90,6 @@ function uglifyDistCss() {
     return gulp.src(stylesheets)
         .pipe(uglifyCss())
         .pipe(gulp.dest(DIST_STYLESHEETS));
-}
-
-function minifyTemplates() {
-    return gulp.src(templates)
-        .pipe(htmlMin({collapseWhitespace: true}))
-        .pipe(gulp.dest(DIST_TEMPLATES))
 }
 
 function copyDependencies() {
@@ -130,7 +123,6 @@ gulp.task('concatDependencies', concatDependencies);
 gulp.task('copyFont', copyFont);
 gulp.task('uglifyDistJs', uglifyDistJs);
 gulp.task('uglifyDistCss', uglifyDistCss);
-gulp.task('minifyTemplates', minifyTemplates);
 gulp.task('copyDependencies', copyDependencies);
 gulp.task('buildIndex', ['concatDependencies', 'copyDependencies', 'uglifyDistCss'], buildIndex);
 gulp.task('copyAngular', copyAngular);
@@ -141,7 +133,6 @@ gulp.task('build-full', [
     'copyFont',
     'uglifyDistJs',
     'uglifyDistCss',
-    'minifyTemplates',
     'copyDependencies',
     'buildIndex',
     'copyAngular',
@@ -153,7 +144,6 @@ gulp.task('build-quick', [
     'copyFont',
     'uglifyDistJs',
     'uglifyDistCss',
-    'minifyTemplates',
     'copyDependencies',
     'buildIndex',
 ]);
