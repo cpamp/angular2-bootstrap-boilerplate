@@ -4,3 +4,4 @@ typings
 dist
 build
 .vscode
+src/scripts/scripts-transpiled/**/*
