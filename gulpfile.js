@@ -6,7 +6,7 @@ var index_file = 'index.html';
 var SRC_INDEX = source_folder + '/' + index_file;
 var DIST_INDEX_NAME = index_file;
 var DIST_JS_DEPENDENCIES = 'dependencies.js';
-var DIST_CSS_DEPENDENCIES = 'dependencies.css';
+var DIST_CSS_CONCAT = 'stylesheets.min.css';
 // Folders
 var DIST_DIR = production_folder;
 var DIST_DEPENDENCIES = DIST_DIR + '/dependencies';
@@ -50,6 +50,7 @@ var scripts_dependencies = [
 ];
 
 var css_dependencies = [
+    stylesheets,
     'node_modules/bootstrap/dist/css/bootstrap.min.css',
     'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'
 ];
@@ -65,7 +66,7 @@ var inject_files = [
     DIST_DEPENDENCIES + '/system.js',
     DIST_DEPENDENCIES + '/systemjs.config.js',
     DIST_DEPENDENCIES + DIST_JS_DEPENDENCIES,
-    DIST_DEPENDENCIES + DIST_CSS_DEPENDENCIES
+    DIST_STYLESHEETS + '/' + DIST_CSS_CONCAT
 ];
 
 function concatDependencies() {
@@ -87,8 +88,9 @@ function uglifyDistJs() {
 }
 
 function uglifyDistCss() {
-    return gulp.src(stylesheets)
+    return gulp.src(css_dependencies)
         .pipe(uglifyCss())
+        .pipe(concat(DIST_CSS_CONCAT))
         .pipe(gulp.dest(DIST_STYLESHEETS));
 }
 

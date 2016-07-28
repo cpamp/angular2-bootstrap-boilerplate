@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "lite": "lite-server",
-    "build": "concurrently \"tsc\" \"gulp build\"",
+    "build": "concurrently \"npm run tsc:w\" \"gulp build\"",
     "postinstall": "typings install"
   },
   "author": "",
