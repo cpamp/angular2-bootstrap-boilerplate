@@ -4,8 +4,8 @@ import {ContactComponent} from './app.contact';
 
 @Component({
     selector: 'app-component',
-    templateUrl: '../../templates/app.component.html',
-    precompile: [AboutComponent, ContactComponent]
+    directives: [AboutComponent, ContactComponent],
+    templateUrl: '../../templates/app.component.html'
 })
 export class AppComponent {
     
