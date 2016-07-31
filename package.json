@@ -9,8 +9,8 @@
     "start:dist": "concurrently \"npm run build:dist\" \"npm run server:dist\"",
     "server:dev": "lite-server -c bs-config.js",
     "server:dist": "lite-server -c bs-config.dist.js",
-    "build:dev": "concurrently \"gulp build:dev\"",
-    "build:dist": "concurrently \"gulp build:dist\"",
+    "build:dev": "gulp build:dev",
+    "build:dist": "gulp build:dist",
     "postinstall": "typings install"
   },
   "author": "",
