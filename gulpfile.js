@@ -59,7 +59,7 @@ var files = {
         scripts: paths.dist.scripts + '/**/*.js'
     },
     dependencies: {
-        angularDependencies: [
+        appDependencies: [
             'node_modules/core-js/client/shim.min.js',
             'node_modules/zone.js/dist/zone.min.js',
             'node_modules/reflect-metadata/Reflect.js',
@@ -80,7 +80,7 @@ var files = {
     }
 }
 
-var injectables = '/lib/*';
+var injectables = ['/lib/*', '/stylesheets/*'];
 
 /** Dependencies */
 var gulp = require('gulp');
@@ -104,7 +104,7 @@ function concatFiles(src, out, dest) {
  * Concat Dependencies
  */
 function concatDependencies(dest) {
-    return gulp.src(files.dependencies.angularDependencies)
+    return gulp.src(files.dependencies.appDependencies)
         .pipe(concat(out.dependencies))
         .pipe(uglify())
         .pipe(gulp.dest(dest));
@@ -213,7 +213,10 @@ gulp.task('ugcss:dist', ['uglify:css:dist']);
  * Build index files
  */
 function buildIndex(path) {
-    var sources = gulp.src(path + injectables, {read: false});
+    injectables.forEach(function(item){
+        item = path + item;
+    });
+    var sources = gulp.src(injectables, {read: false});
     return gulp.src(files.src.index)
         .pipe(inject(sources, {ignorePath: path, addRootSlash: true}))
         .pipe(gulp.dest(path));
