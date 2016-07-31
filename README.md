@@ -24,3 +24,6 @@ out: `out.dependencyStyles`
 ### Injectables
 in: `injectables`  
 out: `out.index`
+## Todo
+- [ ] Separate angular bundle from app bundle
+- [ ] Finalize bootstrap template
