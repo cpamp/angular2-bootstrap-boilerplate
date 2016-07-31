@@ -32,7 +32,8 @@ var out = {
     index: 'index.html',
     scripts: {
         concat: 'app.js',
-        minified: 'app.min.js'
+        minified: 'app.min.js',
+        angular: 'angular.min.js'
     },
     angular: 'angular.js',
     rxjs: 'rxjs.js',
@@ -52,7 +53,7 @@ var files = {
     dev: {
         scripts: paths.dev.scripts + '/*.js',
         scriptsTranspiled: paths.dev.scriptsTranspiled + '/**/*.js',
-        scriptsMain: paths.dev.scriptsTranspiled + '/main.js'
+        scriptsBundled: paths.dev.scripts + '/' + out.scripts.minified
     },
     dist: {
         scripts: paths.dist.scripts + '/**/*.js'
@@ -133,19 +134,6 @@ gulp.task('dependencies:css:dist', dependencyStylesDist);
 gulp.task('d:css:dist', dependencyStylesDist);
 
 /**
- * Concat angular
- */
-function copyAngular(dest) {
-    return gulp.src(files.dependencies.angular).pipe(gulp.dest(dest));
-}
-
-function angularDev() { return copyAngular(paths.dev.angular); }
-gulp.task('angular:dev', angularDev);
-
-function angularDist() { return copyAngular(paths.dist.angular); }
-gulp.task('angular:dist', angularDist);
-
-/**
  * Fonts
  */
 function copyFont(dest) {
@@ -180,14 +168,15 @@ function bundle(base, configPath, sourceFile, outFilePath) {
     return sysBuilder.buildStatic(sourceFile, outFilePath);
 }
 
+// app
 function bundleDev() { return bundle(
-        paths.dev.root, 
+        '.', 
         files.src.systemjsConfig, 
-        'scripts/transpiled/main.js', 
+        files.dev.scriptsTranspiled, 
         paths.dev.scripts + '/' + out.scripts.minified
     ); 
 }
-gulp.task('bundle:dev', ['tsc:dev', 'angular:dev'], bundleDev);
+gulp.task('bundle:dev', ['tsc:dev'], bundleDev);
 
 /**
  * Uglify Transpiled
@@ -198,7 +187,7 @@ function uglifyJs(src, dest) {
         .pipe(gulp.dest(dest));
 }
 
-function uglifyJsDist() { return uglifyJs(files.dev.scripts, paths.dist.scripts); }
+function uglifyJsDist() { return uglifyJs(files.dev.scriptsBundled, paths.dist.scripts); }
 gulp.task('uglify:js:dist', ['tsc:dev'], uglifyJsDist);
 gulp.task('ugjs:dist', ['tsc:dev'], uglifyJsDist);
 
@@ -234,7 +223,7 @@ function indexDev() { return buildIndex(paths.dev.root); }
 gulp.task('index:dev', [
     'dependencies:dev',
     'dependencies:css:dev',
-    'angular:dev',
+    'bundle:dev',
     'fonts:dev',
     'tsc:dev',
     'uglify:css:dev'
@@ -244,7 +233,7 @@ function indexDist() { return buildIndex(paths.dist.root); }
 gulp.task('index:dist', [
     'dependencies:dist',
     'dependencies:css:dist',
-    'angular:dist',
+    'bundle:dev',
     'fonts:dist',
     'tsc:dev',
     'uglify:js:dist',
@@ -257,7 +246,7 @@ gulp.task('index:dist', [
 gulp.task('build:dev', [
     'dependencies:dev',
     'dependencies:css:dev',
-    'angular:dev',
+    'bundle:dev',
     'fonts:dev',
     'tsc:dev',
     'bundle:dev',
@@ -268,7 +257,7 @@ gulp.task('build:dev', [
 gulp.task('build:dist', [
     'dependencies:dist',
     'dependencies:css:dist',
-    'angular:dist',
+    'bundle:dev',
     'fonts:dist',
     'tsc:dev',
     'uglify:js:dist',
