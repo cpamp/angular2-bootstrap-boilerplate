@@ -213,10 +213,11 @@ gulp.task('ugcss:dist', ['uglify:css:dist']);
  * Build index files
  */
 function buildIndex(path) {
+    var toInject = [];
     injectables.forEach(function(item){
-        item = path + item;
+        toInject.push(path + item);
     });
-    var sources = gulp.src(injectables, {read: false});
+    var sources = gulp.src(toInject, {read: false});
     return gulp.src(files.src.index)
         .pipe(inject(sources, {ignorePath: path, addRootSlash: true}))
         .pipe(gulp.dest(path));
