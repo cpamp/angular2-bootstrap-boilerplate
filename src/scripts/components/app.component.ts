@@ -20,6 +20,7 @@ export class AppComponent {
     ];
 
     public jumboTitle: string  = "Hello World!";
+    public jumboSubTitle: string = "an amazing sub-title";
     public jumboBody: string = "Welcome to the angular2-bootstrap-boilerplate.";
     public jumboBotMargin: boolean = true;
 }

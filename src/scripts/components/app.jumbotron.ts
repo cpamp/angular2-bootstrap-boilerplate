@@ -5,10 +5,11 @@ import {NgClass} from '@angular/common';
     selector: 'app-jumbotron',
     directives: [NgClass],
     templateUrl: '../../templates/app.jumbotron.html',
-    inputs: ['title', 'body', 'noBottomMargin']
+    inputs: ['title', 'subTitle', 'body', 'noBottomMargin']
 })
 export class JumbotronComponent {
     public noBottomMargin: boolean = false;
     public title: string = "Hello World";
+    public subTitle: string = "Sub Title";
     public body: string = "Welcome to the angular 2 bootstrap boilerplate";
 }

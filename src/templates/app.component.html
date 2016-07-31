@@ -1,4 +1,6 @@
-<app-jumbotron [title]="jumboTitle" 
+<app-jumbotron 
+  [title]="jumboTitle" 
+  [subTitle]="jumboSubTitle"
   [noBottomMargin]="jumboBotMargin" 
   [body]="jumboBody"></app-jumbotron>
 <nav class="navbar navbar-default navbar-static-top">
@@ -11,11 +13,10 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Brand</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="navigation-toggle">
+    <div class="collapse navbar-collapse navbar-center" id="navigation-toggle">
       <ul class="nav navbar-nav">
         <li *ngFor="let navItem of navItems">
           <a routerLink="{{navItem.path}}">{{navItem.label}}</a>
