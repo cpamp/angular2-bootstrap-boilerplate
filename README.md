@@ -1,4 +1,9 @@
 # angular2-bootstrap-boilerplate
+**Versions**  
+Angular: v2.0.0-rc4  
+Bootstrap: 3.3.6  
+
+
 The project `angular2-bootstrap-boilerplate` is a project created to easily setup and create new angular 2 applications with bootstrap. The project has two build configurations, development and distribution. Npm commands are suffixed by build with `:dev` and `:dist` respectively. Development and distribution builds use `gulp-angular2-embed-templates` to replace `templateUrl` properties with in-line html. Both builds also bundle your app with angular2.
 
 ## NPM Commands
