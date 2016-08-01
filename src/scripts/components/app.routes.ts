@@ -1,10 +1,10 @@
 import {provideRouter, RouterConfig} from '@angular/router';
-import {AppComponent} from './app.component';
+import {HomeComponent} from './app.home';
 import {AboutComponent} from './app.about';
 import {ContactComponent} from './app.contact';
 
 const routes: RouterConfig = [
-    {path: '', component: AppComponent},
+    {path: '', component: HomeComponent},
     {path: 'about', component: AboutComponent},
     {path: 'contact', component: ContactComponent}
 ];
