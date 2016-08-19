@@ -10,7 +10,7 @@ import {ContactComponent} from './app.contact';
     selector: 'app-component',
     templateUrl: '../../templates/app.component.html',
     directives: [ROUTER_DIRECTIVES, JumbotronComponent],
-    precompile: [HomeComponent, AboutComponent, ContactComponent]
+    entryComponents: [HomeComponent, AboutComponent, ContactComponent]
 })
 export class AppComponent {
     public navItems: NavItem[] = [
