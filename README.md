@@ -1,6 +1,6 @@
 # angular2-bootstrap-boilerplate
 **Versions**  
-v0.0.1-alpha.2
+v0.0.1-alpha.2  
 Angular: v2.0.0-rc.5  
 Bootstrap: 3.3.6  
 
