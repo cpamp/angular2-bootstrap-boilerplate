@@ -3,7 +3,6 @@ import {NgClass} from '@angular/common';
 
 @Component({
     selector: 'app-jumbotron',
-    directives: [NgClass],
     templateUrl: '../../templates/app.jumbotron.html',
     inputs: ['title', 'subTitle', 'body', 'noBottomMargin']
 })
